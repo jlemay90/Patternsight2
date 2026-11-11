@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PatternSight — room to reflect</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head><body>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="PatternSight home"><span class="brand-icon">◉</span> PatternSight<span class="brand-dot">.</span></a>
+  <p class="side-caption">A LITTLE SPACE FOR PERSPECTIVE</p>
+  <nav aria-label="Main navigation">
+    <button class="nav-item active" data-page="journal"><span>▤</span> My journal</button>
+    <button class="nav-item" data-page="insights"><span>✧</span> Hidden layers</button>
+    <button class="nav-item" data-page="chat"><span>◌</span> Reflection partner</button>
+    <button class="nav-item" data-page="continuity"><span>⇄</span> Project continuity</button>
+  </nav>
+  <div class="side-note"><span class="tiny-leaf">✳</span><p>Understanding begins<br>with noticing.</p><small>A reflection tool, with room<br>for uncertainty.</small></div>
+  <div class="connection"><span id="connection-dot" class="status-dot"></span><div id="connection-text">Checking connection…</div></div>
+</aside>
+<main>
+  <header><span id="today"></span><button id="export" class="quiet">↓ Export my journal</button></header>
+  <div id="notice" role="status" aria-live="polite" hidden></div>
+  <section id="page-journal" class="page">
+    <div class="intro"><div><p class="eyebrow">YOUR EVERYDAY, SEEN A LITTLE CLEARER</p><h1>Make room for reflection<span>.</span></h1><p class="subtitle">A thought today. A little more understanding tomorrow.</p></div><div class="sun-art" aria-hidden="true">✺</div></div>
+    <div class="journal-layout"><div>
+      <form id="entry-form" class="card composer">
+        <div class="card-heading"><h2 id="composer-title">What’s on your mind?</h2><span class="pill">Just for you</span></div>
+        <input id="edit-entry-id" type="hidden" value="">
+        <label for="entry-text" class="sr-only">Journal entry</label>
+        <textarea id="entry-text" placeholder="Start anywhere. What happened, what stayed with you, or what felt different?" maxlength="10000" required></textarea>
+        <div class="mood-heading"><label>How are you feeling?</label><span>Optional · your own rating</span></div>
+        <div id="moods" class="moods" role="group" aria-label="Mood rating">
+          <button type="button" data-mood="1" aria-pressed="false">☁<small>Low</small></button>
+          <button type="button" data-mood="2" aria-pressed="false">◔<small>Off</small></button>
+          <button type="button" data-mood="3" aria-pressed="false">◑<small>Okay</small></button>
+          <button type="button" data-mood="4" aria-pressed="false">◕<small>Good</small></button>
+          <button type="button" data-mood="5" aria-pressed="false">☀<small>Great</small></button>
+        </div>
+        <label for="tags">Add a little context <span class="muted">· optional</span></label>
+        <input id="tags" placeholder="work, sleep, small wins…" maxlength="247"><small class="field-hint">Separate tags with commas. Paste voice-to-text into the journal above.</small>
+        <div class="composer-footer"><span>◈ Saved on this computer</span><div><button id="cancel-edit" type="button" class="quiet" hidden>Cancel edit</button> <button id="save-button" class="primary" type="submit">Save reflection <span>›</span></button></div></div>
+      </form>
+      <div class="section-heading"><h2>Recent reflections <span id="entry-count" class="count">0</span></h2><span class="muted">One entry at a time</span></div>
+      <div class="card" style="padding:14px 18px;margin-bottom:14px"><label for="search-entries" class="sr-only">Search reflections</label><input id="search-entries" placeholder="Search text or filter by tag…"></div>
+      <div id="entries"></div>
+    </div><div class="right-column">
+      <section class="card trajectory"><div class="card-heading"><h2>Your emotional rhythm</h2><span>›</span></div><p class="muted">Your last 14 mood check-ins</p><div id="mood-chart"></div><p class="chart-footnote">Your ratings, not AI-inferred sentiment.</p></section>
+      <section class="card reflection-card"><span class="eyebrow">A MOMENT TO CONSIDER</span><h3>What gave you a little more energy today?</h3><p>The helpful patterns deserve attention, too.</p><button id="use-prompt" class="text-button">Write about this <span>›</span></button></section>
+      <section class="privacy-note"><span>◇</span><div><strong>Your story stays yours.</strong><p>Entries live in a local database. AI analysis sends selected entries to Google only when you choose it. Journal exports contain personal text.</p></div></section>
+    </div></div>
+  </section>
+  <section id="page-insights" class="page" hidden>
+    <p class="eyebrow">PATTERNS TO EXPLORE, NOT CONCLUSIONS</p><h1>A little beneath the surface<span>.</span></h1><p class="subtitle">Inspect the evidence. Keep what fits. Correct what doesn’t.</p>
+    <div class="card ai-controls"><h2>Look across your reflections</h2><p id="context-description"></p><label class="check"><input id="ai-consent" type="checkbox"> Allow analysis and reflection questions to send the selected entries and up to 30 saved insight corrections to Google. Review Google’s data-use terms for your API tier.</label><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="analyze" class="primary">Explore patterns ✧</button><button id="local-analyze" type="button" class="quiet">Inspect local evidence (Offline)</button></div><p id="ai-setup" class="muted"></p></div>
+    <p id="analysis-summary" class="summary"></p><div id="insights" class="insight-grid"></div>
+  </section>
+  <section id="page-chat" class="page" hidden>
+    <p class="eyebrow">A CONVERSATION WITH CONTEXT</p><h1>Let’s make sense of it<span>.</span></h1><p class="subtitle">Ask about your reflections. Follow the answer back to your own words.</p>
+    <div class="card chat-card"><p id="chat-context" class="muted"></p><div id="messages" role="log" aria-live="polite"><div class="chat-welcome"><span>✧</span><h2>Start with something you’ve noticed.</h2><p>“What seems connected to my frustration?”<br>“When have I felt more at ease?”</p></div></div><form id="chat-form"><label for="question" class="sr-only">Reflection question</label><input id="question" maxlength="2000" placeholder="What would you like to understand?" required><button class="primary">Ask ›</button><button id="local-ask" type="button" class="quiet">Search locally</button></form><p class="field-hint">Answers use the selected journal context and saved corrections. Chat is session-only; each question is independent. Enable Google sharing in Hidden layers first.</p></div>
+  </section>
+  <section id="page-continuity" class="page" hidden>
+    <p class="eyebrow">BUILT TO KEEP GOING</p><h1>One project. Many collaborators<span>.</span></h1><p class="subtitle">The vision, evidence, and next step travel with the code.</p>
+    <div class="card"><div class="card-heading"><h2>Give this to the next agent</h2><button id="copy-handoff" class="quiet">Copy prompt</button></div><label for="handoff-prompt" class="sr-only">Next agent prompt</label><textarea id="handoff-prompt" readonly rows="16"></textarea><p class="muted">Attach the complete source archive as well. This prompt cannot transfer code or install a skill by itself.</p></div>
+    <div class="card handoff-details"><h2>Current handoff</h2><pre id="handoff-state"></pre><details><summary>Verification report</summary><pre id="test-report"></pre></details></div>
+  </section>
+  <footer>PatternSight <span>·</span> Notice. Reflect. Discover what helps.</footer>
+</main></body></html>

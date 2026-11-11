@@ -1,0 +1,22 @@
+Continue PatternSight using the shared public repository:
+https://github.com/jlemay90/patternsight
+
+Clone/fetch it and inspect both `origin/main` (`ee51082`) and work branch `agent/04-aistudio-build`. Read REPOSITORY.md, AGENTS.md, README.md, PROJECT-OVERVIEW.md, ARCHITECTURE.md, DECISIONS.md, KNOWN-ISSUES.md, TEST-REPORT.md, AGENT-HANDOFF.md, and skills/app-continuity/SKILL.md first.
+
+Before making changes, report: the goal, preserved functionality, actual HEAD/branch/dirty state, last tested revision, and baseline test outcomes. Do not claim Claude's missing `agent/02-live-eval-prep` (`b346504` / `e0a0315`) was imported unless its actual bundle/files are supplied.
+
+Product contract:
+- Local-first reflective journal (`data/patternsight.sqlite3`) with entry creation and editing (`/api/entries`, `/api/edit`), dated entry history, search/filter, JSON export/import, self-reported mood trajectory (`1..5`), evidence-cited insights (`0..3` hypotheses with exact verbatim quote verification), counterexamples and uncertainty, persistent user corrections (`/api/feedback`), and grounded chat that clearly states when the journal has no evidence.
+- Server-side Gemini integration (`src/server/engine.ts` via `@google/genai` on port 3000 in `server.ts`, plus `engine.py` in `server.py`) with `GEMINI_API_KEY` kept strictly server-side and explicit `502 AI is not connected` when unset.
+- Offline deterministic evidence inspector (`/api/local-analyze`, `/api/local-chat`) for local exact-quote inspection without external calls.
+
+Run baseline checks before and after your changes:
+- `npx tsx tests/test_server_ts.ts`
+- `python3 -m unittest discover -s tests -v`
+- `node --check static/app.js`
+- `python3 scripts/check_handoff.py`
+- `npm run lint && npm run build`
+
+Next concrete task:
+1. With a valid `GEMINI_API_KEY` configured in AI Studio Secrets or `.env`, run the 5 qualitative cases in `fixtures/reflection-cases.json` against live `gemini-3.8-flash` and verify exact quote citations, sparse zero-insight behavior, counterexample preservation, prompt-injection resistance, and respect for user corrections.
+2. Record actual live outcomes in `TEST-REPORT.md` and `AGENT-HANDOFF.md` without fabricating results if no key is present.

@@ -1,0 +1,6 @@
+{
+  "name": "PatternSight",
+  "description": "An evidence-grounded reflective journal that helps people notice recurring patterns in their own entries, inspect the exact evidence, and test what helps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
